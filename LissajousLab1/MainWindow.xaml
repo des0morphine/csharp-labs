@@ -1,0 +1,134 @@
+<Window x:Class="LissajousLab1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:LissajousLab1.ViewModels"
+        Title="Лабораторна робота №1 - Фігури Ліссажу"
+        Height="720" Width="1050"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Grid Background="#F0F0F0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="380" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="White" BorderBrush="LightGray" BorderThickness="0,0,1,0" Padding="12">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Фігури Ліссажу" FontSize="18" FontWeight="Bold" Margin="0,0,0,8"/>
+
+                    <GroupBox Header="Коливання по осі X" Margin="0,0,0,6" Padding="6">
+                        <StackPanel>
+                            <TextBlock Text="Амплітуда Ax (10 .. 200 ум. од.):" Margin="0,1,0,1"/>
+                            <DockPanel Margin="0,0,0,4">
+                                <TextBox Text="{Binding Ax, UpdateSourceTrigger=PropertyChanged}" Width="55" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+                                <Slider Minimum="10" Maximum="200" Value="{Binding Ax, UpdateSourceTrigger=PropertyChanged}" TickFrequency="10" IsSnapToTickEnabled="False"/>
+                            </DockPanel>
+
+                            <TextBlock Text="Частота fx (0.1 .. 10 Гц):" Margin="0,1,0,1"/>
+                            <DockPanel Margin="0,0,0,4">
+                                <TextBox Text="{Binding Fx, UpdateSourceTrigger=PropertyChanged}" Width="55" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+                                <Slider Minimum="0.1" Maximum="10" Value="{Binding Fx, UpdateSourceTrigger=PropertyChanged}" SmallChange="0.5"/>
+                            </DockPanel>
+
+                            <TextBlock Text="Початкова фаза φx (0° .. 360°):" Margin="0,1,0,1"/>
+                            <DockPanel Margin="0,0,0,2">
+                                <TextBox Text="{Binding PhaseX, UpdateSourceTrigger=PropertyChanged}" Width="55" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+                                <Slider Minimum="0" Maximum="360" Value="{Binding PhaseX, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Коливання по осі Y" Margin="0,0,0,6" Padding="6">
+                        <StackPanel>
+                            <TextBlock Text="Амплітуда Ay (10 .. 200 ум. од.):" Margin="0,1,0,1"/>
+                            <DockPanel Margin="0,0,0,4">
+                                <TextBox Text="{Binding Ay, UpdateSourceTrigger=PropertyChanged}" Width="55" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+                                <Slider Minimum="10" Maximum="200" Value="{Binding Ay, UpdateSourceTrigger=PropertyChanged}" TickFrequency="10" IsSnapToTickEnabled="False"/>
+                            </DockPanel>
+
+                            <TextBlock Text="Частота fy (0.1 .. 10 Гц):" Margin="0,1,0,1"/>
+                            <DockPanel Margin="0,0,0,4">
+                                <TextBox Text="{Binding Fy, UpdateSourceTrigger=PropertyChanged}" Width="55" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+                                <Slider Minimum="0.1" Maximum="10" Value="{Binding Fy, UpdateSourceTrigger=PropertyChanged}" SmallChange="0.5"/>
+                            </DockPanel>
+
+                            <TextBlock Text="Початкова фаза φy (0° .. 360°):" Margin="0,1,0,1"/>
+                            <DockPanel Margin="0,0,0,2">
+                                <TextBox Text="{Binding PhaseY, UpdateSourceTrigger=PropertyChanged}" Width="55" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+                                <Slider Minimum="0" Maximum="360" Value="{Binding PhaseY, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Дискретизація часу" Margin="0,0,0,6" Padding="6">
+                        <StackPanel>
+                            <Grid Margin="0,1,0,3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="80" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Крок часу dt (с):" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="1" Text="{Binding TimeStep, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+
+                            <Grid Margin="0,1,0,3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="80" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Тривалість T (с):" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="1" Text="{Binding TotalTime, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+
+                            <TextBlock Text="{Binding PointsCount, StringFormat='Кількість точок: {0}'}" 
+                                       Foreground="Gray" FontSize="11" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Характерні співвідношення fx : fy" Margin="0,0,0,6" Padding="6">
+                        <UniformGrid Columns="2">
+                            <Button Content="1:1 (Коло)" Margin="2" Height="26"
+                                    Command="{Binding SetPresetCommand}" CommandParameter="1:1_circle"/>
+                            <Button Content="1:1 (Лінія)" Margin="2" Height="26"
+                                    Command="{Binding SetPresetCommand}" CommandParameter="1:1_line"/>
+                            <Button Content="1:2 (Вісімка)" Margin="2" Height="26"
+                                    Command="{Binding SetPresetCommand}" CommandParameter="1:2"/>
+                            <Button Content="2:3" Margin="2" Height="26"
+                                    Command="{Binding SetPresetCommand}" CommandParameter="2:3"/>
+                            <Button Content="3:4" Margin="2" Height="26"
+                                    Command="{Binding SetPresetCommand}" CommandParameter="3:4"/>
+                        </UniformGrid>
+                    </GroupBox>
+
+                    <Button Content="Побудувати фігуру" Height="32" FontWeight="Bold" Margin="0,4,0,0"
+                            Command="{Binding PlotCommand}"/>
+
+                    <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="SemiBold"
+                               TextWrapping="Wrap" Margin="0,6,0,0"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <Border Grid.Column="1" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="1">
+            <Canvas x:Name="PlotCanvas" SizeChanged="PlotCanvas_SizeChanged" Background="White">
+                <Line X1="0" Y1="{Binding CenterY}" X2="{Binding CanvasWidth}" Y2="{Binding CenterY}"
+                      Stroke="LightGray" StrokeThickness="1" StrokeDashArray="4 2"/>
+                <Line X1="{Binding CenterX}" Y1="0" X2="{Binding CenterX}" Y2="{Binding CanvasHeight}"
+                      Stroke="LightGray" StrokeThickness="1" StrokeDashArray="4 2"/>
+
+                <TextBlock Text="O (0, 0)" Canvas.Left="{Binding CenterX}" Canvas.Top="{Binding CenterY}"
+                           Margin="6,4,0,0" Foreground="Gray" FontSize="11"/>
+
+                <Polyline Points="{Binding CurvePoints}"
+                          Stroke="Blue"
+                          StrokeThickness="2"
+                          StrokeLineJoin="Round"/>
+            </Canvas>
+        </Border>
+    </Grid>
+</Window>
