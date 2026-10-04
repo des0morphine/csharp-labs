@@ -1,0 +1,84 @@
+<Window x:Class="InterpolationLab3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:InterpolationLab3.ViewModels"
+        Title="Інтерполяція"
+        Height="550" Width="850"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+            <TextBlock Text="Початок X:"/>
+            <TextBox Text="{Binding XStart}" Margin="0,2,0,8"/>
+
+            <TextBlock Text="Кінець X:"/>
+            <TextBox Text="{Binding XEnd}" Margin="0,2,0,8"/>
+
+            <TextBlock Text="Крок h1:"/>
+            <TextBox Text="{Binding H1}" Margin="0,2,0,8"/>
+
+            <TextBlock Text="Крок h2:"/>
+            <TextBox Text="{Binding H2}" Margin="0,2,0,8"/>
+
+            <CheckBox Content="Еталон" IsChecked="{Binding ShowReference}" Margin="0,3"/>
+            <CheckBox Content="Опорні точки" IsChecked="{Binding ShowPoints}" Margin="0,3"/>
+            <CheckBox Content="Лінійна" IsChecked="{Binding ShowLinear}" Margin="0,3"/>
+            <CheckBox Content="Ерміта" IsChecked="{Binding ShowHermite}" Margin="0,3"/>
+            <CheckBox Content="Графік похибки" IsChecked="{Binding ShowErrorMode}" Margin="0,3"/>
+
+            <Button Content="Розрахувати" Height="28" Margin="0,10,0,10"
+                    Command="{Binding CalculateCommand}"/>
+
+            <TextBlock Text="{Binding StatusMessage}" Foreground="Red" TextWrapping="Wrap" Margin="0,0,0,6"/>
+
+            <TextBlock Text="{Binding NodesCount, StringFormat='Вузлів: {0}'}" Margin="0,2"/>
+            <TextBlock Text="{Binding InterpolationPointsCount, StringFormat='Точок: {0}'}" Margin="0,2"/>
+            <TextBlock Text="{Binding LinearMaxError, StringFormat='Похибка лінійної: {0}'}" Margin="0,2"/>
+            <TextBlock Text="{Binding HermiteMaxError, StringFormat='Похибка Ерміта: {0}'}" Margin="0,2"/>
+        </StackPanel>
+
+        <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1">
+            <Canvas x:Name="PlotCanvas" SizeChanged="PlotCanvas_SizeChanged" ClipToBounds="True">
+                <Line X1="0" Y1="{Binding AxisYPosition}" X2="{Binding CanvasWidth}" Y2="{Binding AxisYPosition}"
+                      Stroke="Gray" StrokeThickness="1"/>
+                <Line X1="{Binding AxisXPosition}" Y1="0" X2="{Binding AxisXPosition}" Y2="{Binding CanvasHeight}"
+                      Stroke="Gray" StrokeThickness="1"/>
+
+                <Polyline Points="{Binding ReferencePoints}" Stroke="Gray" StrokeThickness="1" StrokeDashArray="4 2"/>
+                <Polyline Points="{Binding LinearPoints}" Stroke="Red" StrokeThickness="2"/>
+                <Polyline Points="{Binding HermitePoints}" Stroke="Blue" StrokeThickness="2"/>
+
+                <Polyline Points="{Binding LinearErrorPoints}" Stroke="Red" StrokeThickness="2"/>
+                <Polyline Points="{Binding HermiteErrorPoints}" Stroke="Blue" StrokeThickness="2"/>
+
+                <ItemsControl ItemsSource="{Binding ScreenNodes}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding X}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Ellipse Width="6" Height="6" Fill="Black" Margin="-3,-3,0,0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Canvas>
+        </Border>
+    </Grid>
+</Window>
